@@ -1,14 +1,39 @@
-import express, { Request, Response } from 'express';
 
-const app = express();
-const PORT = 3000;
+import express, { type Request, type Response } from 'express'
+import { User } from './models/user'
 
-app.use(express.json());
+const app = express()
+const port = process.env.PORT
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('TypeScript + Node.js + Express rodando perfeitamente!');
-});
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
-});
+app.get('/', (request: Request, response: Response) => {
+
+    response.json({
+        message: 'Bem-vindo à API de usuários!',
+        timestamp: new Date().toISOString(),
+        status: 'API funcionando!'
+    })
+
+})
+
+app.get('/users', (request: Request, response: Response) => {
+
+    const user = new User('mario', 'mario@gmail.com','12345')
+
+    console.log(user.verificarsenha)
+
+    response.json({
+        message: `Dados Usuario: ${user.nome}`,
+        timestamp: new Date().toISOString(),
+        user: user,
+        status: 'API funcionando!'
+    })
+
+})
+
+app.listen(port, () => {
+    console.log(`Servidor rodando em http://localhost:${port}`)
+    console.log(`Health: http://localhost:${port}/health`)
+})
